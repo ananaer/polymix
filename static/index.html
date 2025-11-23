@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolyMix - 多平台赔率对比</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            text-decoration: none;
+            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .platform-badges {
+            display: flex;
+            gap: 10px;
+        }
+
+        .platform-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .platform-badge.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .badge-polymarket { border-color: #6366f1; color: #6366f1; }
+        .badge-kalshi { border-color: #10b981; color: #10b981; }
+        .badge-odds { border-color: #f59e0b; color: #f59e0b; }
+        .badge-manifold { border-color: #8b5cf6; color: #8b5cf6; }
+
+        /* Game Card - New Design */
+        .game-card {
+            background: rgba(20, 20, 30, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .matchup {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .team-name {
+            color: #667eea;
+        }
+
+        .vs {
+            color: #555;
+            font-size: 16px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .arb-score {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .arb-score.high {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        /* Multi-Platform Comparison Table */
+        .comparison-table {
+            display: table;
+            width: 100%;
+            border-spacing: 0 10px;
+        }
+
+        .comparison-row {
+            display: table-row;
+        }
+
+        .comparison-cell {
+            display: table-cell;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            vertical-align: middle;
+        }
+
+        .comparison-cell:first-child {
+            border-radius: 12px 0 0 12px;
+            font-weight: 600;
+            color: #aaa;
+            width: 180px;
+        }
+
+        .team-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-logo-cell {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .comparison-cell:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+        .platform-cell {
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .platform-cell:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: scale(1.02);
+        }
+
+        .platform-name {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .platform-polymarket .platform-name { color: #6366f1; }
+        .platform-kalshi .platform-name { color: #10b981; }
+        .platform-odds .platform-name { color: #f59e0b; }
+        .platform-manifold .platform-name { color: #8b5cf6; }
+
+        .odds-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .diff-badge {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .diff-badge.high {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        .diff-badge.medium {
+            background: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+        }
+
+        .diff-badge.low {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .unavailable {
+            opacity: 0.3;
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Highlight Best Odds */
+        .best-odds {
+            position: relative;
+        }
+
+        .best-odds::after {
+            content: '★';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 16px;
+            color: #ffd700;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Mobile Responsive Design */
+        @media (max-width: 1024px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .logo {
+                height: 40px;
+            }
+
+            .platform-badges {
+                flex-wrap: wrap;
+            }
+
+            .platform-badge {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .comparison-table {
+                display: block;
+            }
+
+            .comparison-row {
+                display: block;
+                margin-bottom: 15px;
+            }
+
+            .comparison-cell {
+                display: block;
+                width: 100% !important;
+                border-radius: 12px !important;
+                margin-bottom: 8px;
+            }
+
+            .comparison-cell:first-child {
+                background: rgba(102, 126, 234, 0.2);
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .odds-value {
+                font-size: 24px;
+            }
+
+            .game-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .matchup {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo-title {
+                width: 100%;
+            }
+
+            .social-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .social-link {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .social-link span {
+                display: none;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 20px;
+            }
+
+            .arb-score {
+                font-size: 13px;
+                padding: 8px 14px;
+            }
+
+            .team-logo-cell {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <div class="logo-title">
+                    <img src="/static/logoduolai.png" alt="PolyMix Logo" class="logo">
+                    <h1>多平台赔率对比</h1>
+                </div>
+                <div class="social-links">
+                    <a href="https://t.me/dsa885" target="_blank" class="social-link">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.015-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.751-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.121.099.155.232.171.326.016.094.037.308.021.475z"/>
+                        </svg>
+                        <span>Telegram</span>
+                    </a>
+                    <a href="https://x.com/hunterweb303" target="_blank" class="social-link">
+                        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        <span>Twitter</span>
+                    </a>
+                </div>
+            </div>
+            <div class="platform-badges">
+                    <div class="platform-badge badge-polymarket active">
+                        <span>●</span> Polymarket
+                    </div>
+                    <div class="platform-badge badge-kalshi active">
+                        <span>●</span> Kalshi
+                    </div>
+                    <div class="platform-badge badge-odds">
+                        <span>○</span> Sportsbooks
+                    </div>
+                    <div class="platform-badge badge-manifold">
+                        <span>○</span> Manifold
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">比赛总数</div>
+                    <div class="stat-value" id="total-games">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Polymarket</div>
+                    <div class="stat-value" id="poly-count">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Kalshi</div>
+                    <div class="stat-value" id="kalshi-count">-</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">最大差异</div>
+                    <div class="stat-value" id="max-diff">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Games List -->
+        <div id="games-container">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div>加载比赛数据中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getDiffClass(diff) {
+            if (diff >= 5) return 'high';
+            if (diff >= 2) return 'medium';
+            return 'low';
+        }
+
+        function createGameCard(game) {
+            // Calculate differences from Polymarket
+            const polyAway = game.polymarket.away;
+            const polyHome = game.polymarket.home;
+            const kalshiAway = game.kalshi.away;
+            const kalshiHome = game.kalshi.home;
+
+            const kalshiDiffAway = Math.abs(polyAway - kalshiAway);
+            const kalshiDiffHome = Math.abs(polyHome - kalshiHome);
+
+            // Determine best odds for each team
+            const awayBest = polyAway > kalshiAway ? 'poly' : 'kalshi';
+            const homeBest = polyHome > kalshiHome ? 'poly' : 'kalshi';
+
+            return `
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="matchup">
+                            <span class="team-name">${game.away_team}</span>
+                            <span class="vs">@</span>
+                            <span class="team-name">${game.home_team}</span>
+                        </div>
+                        <div class="game-meta">
+                            <div class="arb-score ${game.arbitrage_score >= 70 ? 'high' : ''}">
+                                ⭐ ${game.arbitrage_score}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-table">
+                        <!-- Away Team Row -->
+                        <div class="comparison-row">
+                            <div class="comparison-cell">
+                                <div class="team-cell">
+                                    <img src="${game.away_logo || ''}" alt="${game.away_team}" class="team-logo-cell" onerror="this.style.display='none'">
+                                    <span>${game.away_team}</span>
+                                </div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-polymarket ${awayBest === 'poly' ? 'best-odds' : ''}"
+                                 onclick="window.open('${game.polymarket.url}', '_blank')">
+                                <div class="platform-name">Polymarket</div>
+                                <div class="odds-value">${polyAway}%</div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-kalshi ${awayBest === 'kalshi' ? 'best-odds' : ''}"
+                                 onclick="window.open('${game.kalshi.url}', '_blank')">
+                                <div class="platform-name">Kalshi</div>
+                                <div class="odds-value">${kalshiAway}%</div>
+                                <div class="diff-badge ${getDiffClass(kalshiDiffAway)}">
+                                    Δ ${kalshiDiffAway.toFixed(1)}%
+                                </div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-odds" ${game.odds_api && game.odds_api.url ? `onclick="window.open('${game.odds_api.url}', '_blank')"` : ''}>
+                                ${game.odds_api && game.odds_api.away ?
+                                    `<div class="platform-name">Sportsbooks</div>
+                                     <div class="odds-value">${game.odds_api.away}%</div>
+                                     <div class="diff-badge low" style="font-size:10px">${game.odds_api.bookmakers.slice(0,2).join(', ')}</div>` :
+                                    '<div class="unavailable">暂无数据</div>'}
+                            </div>
+                            <div class="comparison-cell platform-cell platform-manifold" ${game.manifold && game.manifold.url ? `onclick="window.open('${game.manifold.url}', '_blank')"` : ''}>
+                                ${game.manifold && game.manifold.away ?
+                                    `<div class="platform-name">Manifold</div>
+                                     <div class="odds-value">${game.manifold.away}%</div>` :
+                                    '<div class="unavailable">暂无数据</div>'}
+                            </div>
+                        </div>
+
+                        <!-- Home Team Row -->
+                        <div class="comparison-row">
+                            <div class="comparison-cell">
+                                <div class="team-cell">
+                                    <img src="${game.home_logo || ''}" alt="${game.home_team}" class="team-logo-cell" onerror="this.style.display='none'">
+                                    <span>${game.home_team}</span>
+                                </div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-polymarket ${homeBest === 'poly' ? 'best-odds' : ''}"
+                                 onclick="window.open('${game.polymarket.url}', '_blank')">
+                                <div class="platform-name">Polymarket</div>
+                                <div class="odds-value">${polyHome}%</div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-kalshi ${homeBest === 'kalshi' ? 'best-odds' : ''}"
+                                 onclick="window.open('${game.kalshi.url}', '_blank')">
+                                <div class="platform-name">Kalshi</div>
+                                <div class="odds-value">${kalshiHome}%</div>
+                                <div class="diff-badge ${getDiffClass(kalshiDiffHome)}">
+                                    Δ ${kalshiDiffHome.toFixed(1)}%
+                                </div>
+                            </div>
+                            <div class="comparison-cell platform-cell platform-odds" ${game.odds_api && game.odds_api.url ? `onclick="window.open('${game.odds_api.url}', '_blank')"` : ''}>
+                                ${game.odds_api && game.odds_api.home ?
+                                    `<div class="platform-name">Sportsbooks</div>
+                                     <div class="odds-value">${game.odds_api.home}%</div>
+                                     <div class="diff-badge low" style="font-size:10px">${game.odds_api.bookmakers.slice(0,2).join(', ')}</div>` :
+                                    '<div class="unavailable">暂无数据</div>'}
+                            </div>
+                            <div class="comparison-cell platform-cell platform-manifold" ${game.manifold && game.manifold.url ? `onclick="window.open('${game.manifold.url}', '_blank')"` : ''}>
+                                ${game.manifold && game.manifold.home ?
+                                    `<div class="platform-name">Manifold</div>
+                                     <div class="odds-value">${game.manifold.home}%</div>` :
+                                    '<div class="unavailable">暂无数据</div>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch('/api/odds/nba');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update stats
+                    document.getElementById('total-games').textContent = data.stats.total_games;
+                    document.getElementById('poly-count').textContent = data.stats.poly_total;
+                    document.getElementById('kalshi-count').textContent = data.stats.kalshi_total;
+
+                    // Calculate max difference
+                    const allGames = [...(data.games.today || []), ...(data.games.tomorrow || [])];
+                    const maxDiff = allGames.length > 0
+                        ? Math.max(...allGames.map(g => g.diff.max))
+                        : 0;
+                    document.getElementById('max-diff').textContent = maxDiff.toFixed(1) + '%';
+
+                    // Render games
+                    const container = document.getElementById('games-container');
+                    if (allGames.length === 0) {
+                        container.innerHTML = '<div class="loading"><div>暂无比赛数据</div></div>';
+                    } else {
+                        container.innerHTML = allGames.map(createGameCard).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Initial fetch
+        fetchData();
+
+        // Auto refresh every 30 seconds
+        setInterval(fetchData, 30000);
+    </script>
+</body>
+</html>

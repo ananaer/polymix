@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+pip-log.txt
+
+# Logs
+*.log
+server.log
+
+# Environment files
+.env
+.env.*
+
+# Local tools and settings
+.claude/
+.vscode/
+.idea/
+
+# Documentation and non-deployment assets
+*.md
+static/index_old.html
+
+# Snapshots/backups
+*.bak
+*.backup
