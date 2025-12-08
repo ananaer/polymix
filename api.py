@@ -388,12 +388,18 @@ def serve_static(path):
     """Serve static files"""
     return send_from_directory('static', path)
 
-if __name__ == '__main__':
-    # Create static folder if not exists
-    os.makedirs('static', exist_ok=True)
 
-    print("🏀 PolyMix API Server")
-    print("📊 Starting server at http://localhost:5001")
-    print("🔄 Data refreshes every 30 seconds")
+# Vercel serverless function handler
+# The app object is automatically used by Vercel
+# No need to run app.run() in serverless environment
 
-    app.run(debug=True, host='0.0.0.0', port=5001)
+# if __name__ == '__main__':
+#     # Create static folder if not exists
+#     os.makedirs('static', exist_ok=True)
+# 
+#     print("🏀 PolyMix API Server")
+#     print("📊 Starting server at http://localhost:5001")
+#     print("🔄 Data refreshes every 30 seconds")
+# 
+#     app.run(debug=True, host='0.0.0.0', port=5001)
+
